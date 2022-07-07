@@ -1,14 +1,13 @@
 GET {{baseUrl}}/books/
 ###
 
-GET {{baseUrl}}/books/1/
+GET {{baseUrl}}/books/62c71f42416a6c08d3dfa764
 ###
 
 POST {{baseUrl}}/books/
 Content-Type: application/json
 
 {
-  "id": 1,
   "title": "APITitle",
   "description": "This is my title from API",
   "authors": "stPitty",
@@ -18,15 +17,15 @@ Content-Type: application/json
 }
 ###
 
-PUT {{baseUrl}}/books/1/
+PUT {{baseUrl}}/books/62c71cc2fe1d6c1ce39a063e
 Content-Type: application/json
 
 {
-  "title": "NewTitle"
+  "title": "SDADSADASDSAD"
 }
 ###
 
-DELETE {{baseUrl}}/books/1
+DELETE {{baseUrl}}/books/62c71f8f416a6c08d3dfa76b
 ###
 
 POST {{baseUrl}}/user/login/

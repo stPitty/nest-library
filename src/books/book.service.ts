@@ -1,47 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { BookDTO } from './book.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Book, BookDocument } from './book.schema';
+import { Model } from 'mongoose';
+import { IBookDto } from './book.dto';
+import { retry } from 'rxjs';
 
 @Injectable()
 export class BookService {
-  private readonly books: BookDTO[] = [];
+  constructor(
+    @InjectModel(Book.name) private bookRepository: Model<BookDocument>,
+  ) {}
 
-  getBooks(): BookDTO[] {
-    return this.books;
+  async getBooks(): Promise<Book[]> {
+    return this.bookRepository.find().select('-__v');
   }
 
-  getBook(id: string): BookDTO | null {
-    return this.books.find((book) => {
-      return book.id == id || null;
-    });
+  async getBook(id: string): Promise<Book> {
+    return this.bookRepository.findById(id).select('-__v');
   }
 
-  createBook(book: BookDTO): string {
-    this.books.push(book);
-    return book.id;
+  async createBook(book: Book): Promise<IBookDto> {
+    return this.bookRepository.create(book);
   }
 
-  updateBook(id: string, updatedBook: BookDTO): BookDTO {
-    const book = this.getBook(id);
-    const bookIndex = this.findBookIndex(book);
+  async updateBook(id: string, book: Book): Promise<Book> {
+    await this.bookRepository.findByIdAndUpdate(id, book).select('-__v');
 
-    const newBook = {
-      ...book,
-      ...updatedBook,
-    };
-    this.books[bookIndex] = newBook;
-
-    return newBook;
+    return this.getBook(id);
   }
 
-  removeBook(id: string): BookDTO {
-    const book = this.getBook(id);
-    const bookIndex = this.findBookIndex(book);
-    this.books.splice(bookIndex, 1);
-
-    return book;
-  }
-
-  findBookIndex(book: BookDTO): number | null {
-    return this.books.indexOf(book);
+  async removeBook(id: string): Promise<Book> {
+    return this.bookRepository.findByIdAndDelete(id).select('-__v');
   }
 }

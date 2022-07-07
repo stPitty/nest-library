@@ -7,53 +7,51 @@ import {
   Param,
   Post,
   Put,
-  Req,
   Res,
 } from '@nestjs/common';
 import { BookService } from './book.service';
-import { Request, Response } from 'express';
-import { BookDTO } from './book.dto';
+import { Response } from 'express';
+import { Book } from './book.schema';
 
 @Controller('/books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get()
-  getBooks(@Res() res: Response) {
-    const books = this.bookService.getBooks();
+  async getBooks(@Res() res: Response) {
+    const books = await this.bookService.getBooks();
 
     res.status(HttpStatus.OK).json(books);
   }
 
   @Get(':id')
-  getBook(@Param('id') id: string, @Res() res: Response) {
-    const book = this.bookService.getBook(id);
+  async getBook(@Param('id') id: string, @Res() res: Response) {
+    const book = await this.bookService.getBook(id);
 
-    console.log(book);
     res.status(HttpStatus.OK).json(book);
   }
 
   @Post()
-  createBook(@Body() book: BookDTO, @Res() res: Response) {
-    const id = this.bookService.createBook(book);
+  async createBook(@Body() book: Book, @Res() res: Response) {
+    const created = await this.bookService.createBook(book);
 
-    res.status(HttpStatus.CREATED).json({ id: id });
+    res.status(HttpStatus.CREATED).json({ id: created._id });
   }
 
   @Put(':id')
-  updateBook(
-    @Body() book: BookDTO,
+  async updateBook(
+    @Body() book: Book,
     @Param('id') id: string,
     @Res() res: Response,
   ) {
-    const newBook = this.bookService.updateBook(id, book);
+    const newBook = await this.bookService.updateBook(id, book);
 
     res.status(HttpStatus.OK).json(newBook);
   }
 
   @Delete(':id')
-  removeBook(@Param('id') id: string, @Res() res: Response) {
-    const removed = this.bookService.removeBook(id);
+  async removeBook(@Param('id') id: string, @Res() res: Response) {
+    const removed = await this.bookService.removeBook(id);
 
     res.status(HttpStatus.OK).json(removed);
   }
