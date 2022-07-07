@@ -1,0 +1,50 @@
+GET {{baseUrl}}/books/
+###
+
+GET {{baseUrl}}/books/1/
+###
+
+POST {{baseUrl}}/books/
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "APITitle",
+  "description": "This is my title from API",
+  "authors": "stPitty",
+  "favorite": "Number one",
+  "fileCover": "SomeText",
+  "fileName": "Okay"
+}
+###
+
+PUT {{baseUrl}}/books/1/
+Content-Type: application/json
+
+{
+  "title": "NewTitle"
+}
+###
+
+DELETE {{baseUrl}}/books/1
+###
+
+POST {{baseUrl}}/user/login/
+Content-Type: application/json
+
+{
+  "id": 12,
+  "mail": "example@mail.com"
+}
+###
+
+POST {{baseUrl}}/books/upload-book/
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="fileBook"; filename="demoid.txt";
+< ./input.txt --boundary--
+###
+
+GET {{baseUrl}}/books/demoid.txt/download/
+###
